@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Alexis Wamster</title>
+        <link rel="stylesheet" href="../css/style.css">
+    </head>
+    <body>
+        <nav class="a-navBarre">
+            <nav class="a-flex">
+                <a class="a-navLien a-navLien-selection" href="index.html">Home</a>
+                <a class="a-navLien" href="#">Profesional experience</a>
+                <a class="a-navLien" href="#">Education</a>
+                <a class="a-navLien" href="#">Civic Engagement</a>
+                <a class="a-navLien" href="#">Project</a>
+                <a class="a-navLien" href="mobility.html">Mobility</a>
+                <a class="a-navLien" href="#">Hobbies</a>
+            </nav>
+            <nav class="a-marginRight a-flex">
+                <div><a href="https://github.com/Alexis-Wamster" target="blank">
+                  <img class="a-logo" src="../src/logo_github.png">
+                </a></div>
+                <div><a href="https://www.youtube.com/@mc-dala3398" target="blank">
+                  <img class="a-logo" src="../src/logo_youtube.png">
+                </a></div>
+                <div><a href="https://www.linkedin.com/in/alexis-wamster-419ab528b/" target="blank">
+                  <img class="a-logo" src="../src/logo_linkedin.png">
+                </a></div>
+            </nav>
+        </nav>
+        <h1 style="margin: 50px 0px 0px 5%;">Welcome !</h1>
+        <div class="a-mainPage">
+            <div class="a-card-up">
+                <div class="a-flex">
+                    <div class="image1">
+                        <img style="width: 100%;"src="../src/photo_profil.png">
+                    </div>
+                    <div class="texte1">
+                        <h1>I'm Alexis Wamster</h1>
+                        <p>I'm an IT student in the ENSEEIHT university at Toulouse.<br>
+                            I also develop a software at the Kuehne+Nagel company during my apprenticeship
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!--carousel-->
+            <div class="carousel-container">
+                <div class="carousel-wrapper" id="carouselWrapper">
+                  <div class="carousel-item">
+                    <img src="../src/AlexisWamsterTrail.jpg" alt="Image 1">
+                    <div class="text">Hobbies: Run in nature (trail, Ultra trail, Marathon)</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="../src/ambulanceMelun.jpg" alt="Image 2">
+                    <div class="text">Civic Engagement: fireman in Melun</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="../src/N7.jpg" alt="Image 3">
+                    <div class="text">Education: IT School Engineer at N7 Toulouse</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="../src/voyage.jpg" alt="Image 2">
+                    <div class="text">Mobility: coming soon</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="../src/kuehnenagel.png" alt="Image 2">
+                    <div class="text">Professional experience: internship and apprenticeship in Kuehne+Nagel Companie</div>
+                  </div>
+                </div>
+                <button class="button button-left" onclick="previousSlide()">&#10094;</button>
+                <button class="button button-right" onclick="nextSlide()">&#10095;</button>
+
+                <div class="carousel-indicators" id="carouselIndicators">
+                  <div class="indicator" onclick="goToSlide(0)"></div>
+                </div>
+              </div>
+        </div>
+    </body>
+    <script src="../script/carousel.js"></script>
+</html>
