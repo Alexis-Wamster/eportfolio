@@ -10,11 +10,17 @@
 body{
 	margin: 0px;
 	min-height: 100vh;
+	display: flex;
+    flex-direction: column;
+	flex: 1;
+}
+
+.a-navLien{
+	text-decoration: none;
 }
 
 a{
-	color: var(--blanc);
-	text-decoration: none;
+	color: inherit;
 }
 
 body{
@@ -64,6 +70,7 @@ body{
     text-decoration-color: #ffffff; /* Définir la couleur du soulignement */
     text-decoration-thickness: 3px; /* Modifier l'épaisseur du soulignement */
     text-underline-offset: 5px;
+	color: #ffffff;
 }
 
 .a-mainPage{

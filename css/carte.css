@@ -1,0 +1,121 @@
+.project-card {
+    display: flex;
+    background-color: var(--claire);
+    /*border: 1px solid #ddd;*/
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #555;
+}
+
+.card-image,
+.project-image {
+    width: 30%;
+    object-fit: cover;
+    margin-right: 16px;
+}
+
+.card-content,
+.project-content {
+    padding: 16px;
+    flex: 1;
+}
+
+.card-title,
+.project-title {
+    font-size: 1.5rem;
+    color: var(--foncee1);
+    margin-bottom: 8px;
+}
+
+.card-flags,
+.project-flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.static-flag {
+    background-color: var(--foncee2);
+    color: white;
+    padding: 4px 8px;
+    font-size: 0.875rem;
+    border-radius: 4px;
+}
+
+.card-description,
+.project-description, 
+.project-concepts, 
+.project-features {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.project-content h3 {
+    font-size: 1.25rem;
+    margin-top: 12px;
+    color: var(--foncee2);
+}
+
+/*////////////////////////////////////---Flag---/////////////////////////////////////////////*/
+
+.flag-container {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--claire);
+    border-radius: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.flag-container div{
+    color:black;
+    padding: 8px 16px;
+}
+
+.flag {
+    padding: 8px 16px;
+    border: 1px solid black;
+    color:black;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #fff;
+    user-select: none;
+}
+
+.flag.selected {
+    background-color: var(--foncee2);
+    color: white;
+    border-color: var(--foncee1);
+}
+
+.hidden {
+    display: none;
+}
+
+/*////////////////////////////////////---Button---/////////////////////////////////////////////*/
+
+.card-buttons {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px; /* Espacement entre les boutons */
+}
+
+.card-button {
+    display: inline-block;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    background-color: var(--violet); /* Couleur bleu */
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.card-button:hover {
+    background-color: color-mix(in srgb, var(--violet) 80%, white 20%); /* Bleu plus foncé au survol */
+}
