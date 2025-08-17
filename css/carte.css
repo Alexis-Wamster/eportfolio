@@ -16,6 +16,13 @@
     margin-right: 16px;
 }
 
+@media (max-width: 600px) {
+    .card-image,
+    .project-image {
+        display: none;
+    }
+}
+
 .card-content,
 .project-content {
     padding: 16px;
