@@ -3,13 +3,14 @@
     <head>
         <title>Alexis Wamster</title>
         <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/nav.css">
         <link rel="stylesheet" href="../css/carte.css">
         <link rel="stylesheet" href="../css/footer.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     </head>
     <body>
         <nav class="a-navBarre">
-            <nav class="a-flex">
+            <nav class="a-flex in-links">
                 <a class="a-navLien" href="index.html">Home</a>
                 <a class="a-navLien" href="experience.html">Profesional experience</a>
                 <a class="a-navLien a-navLien-selection" href="education.html">Education</a>
@@ -18,7 +19,7 @@
                 <a class="a-navLien" href="mobility.html">Mobility</a>
                 <a class="a-navLien" href="hobbies.html">Hobbies</a>
             </nav>
-            <nav class="a-marginRight a-flex">
+            <nav class="a-marginRight a-flex out-links">
                 <div><a href="https://github.com/Alexis-Wamster" target="blank">
                   <img class="a-logo" src="../src/logo_github.png">
                 </a></div>
@@ -27,6 +28,8 @@
                 </a></div>
             </nav>
         </nav>
+        <div class="show-nav" onclick="document.body.classList.add('nav-open')"><img src="../src/menu.png"></div>
+        <div class="hide-nav" onclick="document.body.classList.remove('nav-open');"><img src="../src/croix.png"></div>
         <h1 style="margin: 50px 0px 0px 5%;">Education !</h1>
 
         <div class="a-mainPage">

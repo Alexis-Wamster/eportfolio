@@ -15,10 +15,6 @@ body{
 	flex: 1;
 }
 
-.a-navLien{
-	text-decoration: none;
-}
-
 a{
 	color: inherit;
 }
@@ -30,47 +26,10 @@ body{
 	font-size: 17px;
 }
 
-.a-navBarre{
-	background: linear-gradient(90deg, var(--violet), var(--foncee2));
-	border-radius: 0px 0px 0px 20px;
-	padding: 10px 0px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-
-}
-
 .a-flex{
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
-}
-
-.a-navLien{
-	padding: 0px 20px;
-	border-right: 3px solid white;
-	height: 100%;
-}
-
-.a-navLien::after{
-	content: "";
-	display: block;
-	height: 3px;
-	background: #ffffff;
-	transition: transform 0.2s ease-in-out;
-	transform: scale(0);
-}
-
-.a-navLien:hover::after{
-    transform: scale(1);
-}
-
-.a-navLien-selection {
-    text-decoration: underline; /* Applique un soulignement */
-    text-decoration-color: #ffffff; /* Définir la couleur du soulignement */
-    text-decoration-thickness: 3px; /* Modifier l'épaisseur du soulignement */
-    text-underline-offset: 5px;
-	color: #ffffff;
 }
 
 .a-mainPage{
@@ -188,4 +147,12 @@ body{
 
 .indicator.active {
     background-color: #ffffff;
+}
+
+
+
+@media (max-width: 800px) {
+	.a-mainPage{
+		margin: 100px 10px 10px 10px;
+	}
 }

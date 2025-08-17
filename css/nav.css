@@ -1,0 +1,121 @@
+.show-nav, .hide-nav {
+    display: none;
+}
+
+
+.a-navLien{
+	text-decoration: none;
+}
+
+.a-navBarre{
+	background: linear-gradient(90deg, var(--violet), var(--foncee2));
+	border-radius: 0px 0px 0px 20px;
+	padding: 10px 0px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+}
+
+.a-navLien{
+	padding: 0px 20px;
+	border-right: 3px solid white;
+	height: 100%;
+}
+
+.a-navLien::after{
+	content: "";
+	display: block;
+	height: 3px;
+	background: #ffffff;
+	transition: transform 0.2s ease-in-out;
+	transform: scale(0);
+}
+
+.a-navLien:hover::after{
+    transform: scale(1);
+}
+
+.a-navLien-selection {
+    text-decoration: underline; /* Applique un soulignement */
+    text-decoration-color: #ffffff; /* Définir la couleur du soulignement */
+    text-decoration-thickness: 3px; /* Modifier l'épaisseur du soulignement */
+    text-underline-offset: 5px;
+	color: #ffffff;
+}
+
+@media (max-width: 800px) {
+    .a-navBarre {
+        display: none;
+    }
+
+    .show-nav {
+        display: block;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1001;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .show-nav img, .hide-nav img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .hide-nav {
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1002;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .nav-open .a-navBarre {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(90deg, var(--violet), var(--foncee2));
+        z-index: 1000;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 60px;
+    }
+    .nav-open .in-links{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav-open .out-links{
+        display: flex;
+        flex-direction: flex-start;
+        margin-top: 20px;
+    }
+
+    .nav-open .show-nav {
+        display: none;
+    }
+
+    .nav-open .hide-nav {
+        display: block;
+    }
+
+    .nav-open .a-navLien {
+        display: block;
+        padding: 20px;
+        border: none;
+        border-bottom: 1px solid #fff;
+        font-size: 1.2rem;
+        color: #fff;
+        text-align: center;
+    }
+}
