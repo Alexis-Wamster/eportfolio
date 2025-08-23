@@ -22,20 +22,21 @@
             </nav>
             <nav class="a-marginRight a-flex out-links">
                 <div><a href="https://github.com/Alexis-Wamster" target="blank">
-                  <img class="a-logo" src="../src/logo_github.png">
+                  <img class="a-logo" src="../src/general/logo_github.png">
                 </a></div>
                 <div><a href="https://www.linkedin.com/in/alexis-wamster-419ab528b/" target="blank">
-                  <img class="a-logo" src="../src/logo_linkedin.png">
+                  <img class="a-logo" src="../src/general/logo_linkedin.png">
                 </a></div>
             </nav>
         </nav>
-        <div class="show-nav" onclick="document.body.classList.add('nav-open')"><img src="../src/menu.png"></div>
-        <div class="hide-nav" onclick="document.body.classList.remove('nav-open');"><img src="../src/croix.png"></div>
+        <div class="show-nav" onclick="document.body.classList.add('nav-open')"><img src="../src/general/menu.png"></div>
+        <div class="hide-nav" onclick="document.body.classList.remove('nav-open');"><img src="../src/general/croix.png"></div>
+        <canvas id="background"></canvas>
         <h1 style="margin: 50px 0px 0px 5%;">Education !</h1>
 
         <div class="a-mainPage">
             <div class="project-card" data-flags="Education Engineering">
-                <img src="../src/N7.jpg" alt="ENSEEIHT" class="card-image">
+                <img src="../src/education/N7.jpg" alt="ENSEEIHT" class="card-image">
                 <div class="card-content">
                     <h2 class="card-title">Engineering School ENSEEIHT</h2>
                     <p><strong>2024 - 2027 | Toulouse (31), France</strong></p>
@@ -52,7 +53,7 @@
             </div>
             
             <div class="project-card">
-                <img src="../src/iut.jpg" alt="BUT Informatique" class="card-image">
+                <img src="../src/education/iut.jpg" alt="BUT Informatique" class="card-image">
                 <div class="card-content">
                     <h2 class="card-title">Bachelor of Technology in Computer Science</h2>
                     <p><strong>2022 - 2024 | Fontainebleau (77), France</strong></p>
@@ -68,7 +69,7 @@
             </div>
             
             <div class="project-card">
-                <img src="../src/lycee.jpeg" alt="Lycée Saint Aspais" class="card-image">
+                <img src="../src/education/lycee.jpeg" alt="Lycée Saint Aspais" class="card-image">
                 <div class="card-content">
                     <h2 class="card-title">Saint Aspais High School</h2>
                     <p><strong>2019 - 2022 | Melun (77), France</strong></p>
@@ -95,7 +96,7 @@
             </div>
             
             <div class="project-card">
-                <img src="../src/college.jpg" alt="Collège Sainte Jeanne d'Arc" class="card-image">
+                <img src="../src/education/college.jpg" alt="Collège Sainte Jeanne d'Arc" class="card-image">
                 <div class="card-content">
                     <h2 class="card-title">Sainte Jeanne d'Arc Middle School</h2>
                     <p><strong>2015 - 2019 | Melun (77), France</strong></p>
@@ -113,7 +114,7 @@
             </div>
             
             <div class="project-card">
-                <img src="../src/primaire.jpg" alt="Ecole Sisley" class="card-image">
+                <img src="../src/education/primaire.jpg" alt="Ecole Sisley" class="card-image">
                 <div class="card-content">
                     <h2 class="card-title">Sisley School</h2>
                     <p><strong>2010 - 2015 | La Rochette (77), France</strong></p>
@@ -130,8 +131,8 @@
             <div class="footer-container">
                 <div class="footer-section">
                     <h3>Download CV</h3>
-                    <a href="../src/cv_french.pdf" download>🇫🇷 French Version</a>
-                    <a href="../src/cv_english.pdf" download>🇬🇧 English Version</a>
+                    <a href="../src/general/cv_french.pdf" download>🇫🇷 French Version</a>
+                    <a href="../src/general/cv_english.pdf" download>🇬🇧 English Version</a>
                 </div>
                 <div class="footer-section">
                     <h3>Contact Me</h3>
@@ -169,4 +170,5 @@
         </footer>
 
     </body>
+    <script type="module" src="../script/education/main.js"></script>
 </html>
