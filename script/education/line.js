@@ -16,11 +16,27 @@ export class Line {
     animation_phase = 1; // 1 pour apparition, -1 pour disparition
 
     // methodes
-    constructor(x1, y1, x2, y2) {
+    constructor(x1, y1, x2, y2, {already_animated = false} = {}) {
         this.x1 = x1;
         this.x2 = x2;
         this.y1 = y1;
         this.y2 = y2;
+        console.log(Line.MAX_OPACITY)
+
+        if (already_animated) {
+            this.animation_playing = true;
+            const step = Math.floor(Math.random() * (-Line.MIN_ANIMATION_TIME / Line.SPEED_ANIMATION));
+            this.animation_phase = Math.random() < 0.5 ? 1 : -1;
+
+            if (this.animation_phase === 1) {
+                this.animation_time = Line.MIN_ANIMATION_TIME + Line.SPEED_ANIMATION * this.animation_phase * step;
+            }
+            else {
+                this.animation_time = 0 + Line.SPEED_ANIMATION * this.animation_phase * step;
+            }
+            this.opacity = Line.MAX_OPACITY * Math.pow(1 - this.animation_time / Line.MIN_ANIMATION_TIME, Math.exp(Line.EASE_ANIMATION_FACTOR));
+            console.log(this.opacity);
+        }
     }
 
     update() {
@@ -40,6 +56,16 @@ export class Line {
                 this.animation_playing = false;
                 this.animation_time = Line.MIN_ANIMATION_TIME;
             }
+        }
+        if (isNaN(this.opacity)) {
+            console.warn("NaN opacity", {
+                
+                animation_time: this.animation_time,
+                min: Line.MIN_ANIMATION_TIME,
+                expr: 1 - this.animation_time / Line.MIN_ANIMATION_TIME,
+                exp: Math.exp(Line.EASE_ANIMATION_FACTOR)
+            });
+            this.opacity = 0;
         }
     }
 

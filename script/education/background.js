@@ -14,22 +14,17 @@ export class Background {
         Line.canvas = canvas;
 
         // Prépare les lignes verticales et horizontales
-        for (let x = case_size; x < canvas.width; x += case_size) {
-            this.lines.push(new Line(x, 0, x, canvas.height));
-        }
-        for (let y = case_size; y < canvas.height; y += case_size) {
-            this.lines.push(new Line(0, y, canvas.width, y));
-        }
+        
     }
 
     resize() {
         // Recrée les lignes en fonction de la nouvelle taille
         this.lines = [];
         for (let x = this.case_size; x < this.canvas.width; x += this.case_size) {
-            this.lines.push(new Line(x, 0, x, this.canvas.height));
+            this.lines.push(new Line(x, 0, x, this.canvas.height, {already_animated: true}));
         }
         for (let y = this.case_size; y < this.canvas.height; y += this.case_size) {
-            this.lines.push(new Line(0, y, this.canvas.width, y));
+            this.lines.push(new Line(0, y, this.canvas.width, y, {already_animated: true}));
         }
     }
 
@@ -47,7 +42,7 @@ export class Background {
 
         // Pulse aléatoirement quelques lignes
         for (const line of this.lines) {
-            if (!line.pulse && Math.random() < 0.0005*this.lines.length) {
+            if (!line.animation_playing && Math.random() < 0.0005*this.lines.length) {
                 line.animation_playing = true;
             }
             line.update();

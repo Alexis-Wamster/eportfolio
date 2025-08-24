@@ -1,7 +1,14 @@
 export class Wave {
     static canvas = null;
 
-    constructor(x, y, color = "white") {
+    constructor(
+        {
+            x = (Math.random() * Wave.canvas.width),
+            y = (Math.random() * Wave.canvas.height),
+            color = "white",
+            already_ring = false
+        } = {}
+    ) {
         this.x = x;
         this.y = y;
         this.radius = 0;
@@ -9,6 +16,12 @@ export class Wave {
         this.growth = 0.5; // pixels per frame
         this.fade = 0.001; // opacity lost per frame
         this.color = color;
+
+        if (already_ring) {
+            const step = Math.floor(Math.random() * (this.opacity / this.fade));
+            this.radius += this.growth*step;
+            this.opacity -= this.fade*step;
+        }
     }
 
     update() {
