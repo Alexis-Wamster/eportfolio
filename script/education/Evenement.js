@@ -158,6 +158,7 @@ export class Evenement {
 
     event_touchmove(event){
         if (!this.jeu.isFreeze){
+            event.preventDefault();
             const touch = [
                 event.changedTouches[0].pageX,
                 event.changedTouches[0].pageY,
