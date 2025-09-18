@@ -19,7 +19,7 @@ export class Evenement {
         // mobile
         document.addEventListener('click', this.event_click.bind(this));
         document.addEventListener('touchstart', this.event_touchstart.bind(this));
-        document.addEventListener('touchmove', this.event_touchmove.bind(this));
+        document.addEventListener('touchmove', this.event_touchmove.bind(this), { passive: false });
         this.threshold = 100;
         this.start = [];
         this.doubleClickDelay = 300; // ms
