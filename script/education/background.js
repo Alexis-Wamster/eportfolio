@@ -5,9 +5,9 @@ export class Background {
     static COLOR_FONCEE2 = "#331c52";
     static LINE_COLOR = "rgba(255,255,255,0.3)";
 
-    constructor(canvas, ctx, case_size) {
+    constructor(canvas, case_size) {
         this.canvas = canvas;
-        this.ctx = ctx;
+        this.ctx = canvas.getContext('2d');;
         this.case_size = case_size;
         this.hue = 0;
         this.lines = [];
@@ -31,14 +31,15 @@ export class Background {
     // ...existing code...
     draw() {
         // Fond dégradé
-        const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
-        gradient.addColorStop(0, Background.COLOR_FONCEE1);
-        gradient.addColorStop(1, Background.COLOR_FONCEE2);
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        //const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+        //gradient.addColorStop(0, Background.COLOR_FONCEE1);
+        //gradient.addColorStop(1, Background.COLOR_FONCEE2);
+        //this.ctx.fillStyle = gradient;
+        //this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
 
         // Animation des lignes (pulsation)
-        this.ctx.save();
+        //this.ctx.save();
 
         // Pulse aléatoirement quelques lignes
         for (const line of this.lines) {
@@ -48,7 +49,7 @@ export class Background {
             line.update();
             line.draw(this.ctx);
         }
-        this.ctx.restore();
+        //this.ctx.restore();
     }
 //
 }

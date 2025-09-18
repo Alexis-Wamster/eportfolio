@@ -32,6 +32,7 @@
         <div class="show-nav" onclick="document.body.classList.add('nav-open')"><img src="../src/general/menu.png"></div>
         <div class="hide-nav" onclick="document.body.classList.remove('nav-open');"><img src="../src/general/croix.png"></div>
         <canvas id="background"></canvas>
+        <canvas id="foreground" class="invisible"></canvas>
         <h1 style="margin: 50px 0px 0px 5%;">Education !</h1>
 
         <div class="a-mainPage">
@@ -170,5 +171,5 @@
         </footer>
 
     </body>
-    <script type="module" src="../script/education/main.js"></script>
+    <script type="module" src="../script/education/main.js" defer></script>
 </html>

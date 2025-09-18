@@ -1,24 +1,38 @@
 import { Background } from './background.js';
+import { Evenement } from './Evenement.js';
+import { Jeu } from './Jeu.js';
+import { Boucle } from './Boucle.js';
 
-const canvas = document.getElementById('background');
-const ctx = canvas.getContext('2d');
-const background = new Background(canvas, ctx, 50);
+//########################## CONSTANTE ##########################\\
+
+const canvas_bg = document.getElementById('background');
+const canvas_fg = document.getElementById('foreground');
+const caseSize = 50;
+const background = new Background(canvas_bg, caseSize);
+
+//########################## MAIN CODE ##########################\\
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+let jeu = new Jeu(canvas_fg, caseSize);
+let boucle = new Boucle(jeu);
+let evenement = new Evenement(jeu, boucle);
+
+background_animate();
+
+//########################## MAIN FUNCTION ##########################\\
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas_bg.width = window.innerWidth;
+    canvas_bg.height = window.innerHeight;
+    canvas_fg.width = window.innerWidth;
+    canvas_fg.height = window.innerHeight;
     background.resize();
 }
 
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-// Utilisation :
-
-animate();
-
-
-function animate() {
+function background_animate() {
     background.draw();
-    requestAnimationFrame(animate);
+    boucle.boucler();
+    requestAnimationFrame(background_animate);
 }

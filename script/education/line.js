@@ -21,7 +21,6 @@ export class Line {
         this.x2 = x2;
         this.y1 = y1;
         this.y2 = y2;
-        console.log(Line.MAX_OPACITY)
 
         if (already_animated) {
             this.animation_playing = true;
@@ -35,7 +34,6 @@ export class Line {
                 this.animation_time = 0 + Line.SPEED_ANIMATION * this.animation_phase * step;
             }
             this.opacity = Line.MAX_OPACITY * Math.pow(1 - this.animation_time / Line.MIN_ANIMATION_TIME, Math.exp(Line.EASE_ANIMATION_FACTOR));
-            console.log(this.opacity);
         }
     }
 
@@ -58,23 +56,15 @@ export class Line {
             }
         }
         if (isNaN(this.opacity)) {
-            console.warn("NaN opacity", {
-                
-                animation_time: this.animation_time,
-                min: Line.MIN_ANIMATION_TIME,
-                expr: 1 - this.animation_time / Line.MIN_ANIMATION_TIME,
-                exp: Math.exp(Line.EASE_ANIMATION_FACTOR)
-            });
             this.opacity = 0;
         }
     }
 
     draw(ctx) {
         if (!Line.canvas) {
-            console.error("Canvas not set for Line class.");
             return;
         }
-        ctx.save();
+        //ctx.save();
         ctx.lineWidth = Line.LINE_WIDTH;
 
         ctx.globalAlpha = this.opacity;
