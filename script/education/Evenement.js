@@ -49,6 +49,7 @@ export class Evenement {
     }
 
     left(){
+        console.log("left");
         let derniereDirection = this.get_lastDirection();
         if (derniereDirection != Evenement.RIGHT && this.pressLeft == false) {
             this.jeu.direction.push(Evenement.LEFT);
@@ -57,6 +58,7 @@ export class Evenement {
     }
 
     right(){
+        console.log("right");
         let derniereDirection = this.get_lastDirection();
         if (derniereDirection != Evenement.LEFT && this.pressRight == false) {
             this.jeu.direction.push(Evenement.RIGHT);
@@ -65,6 +67,7 @@ export class Evenement {
     }
 
     up(){
+        console.log("up");
         let derniereDirection = this.get_lastDirection();
         if (derniereDirection != Evenement.DOWN && this.pressUp == false) {
             this.jeu.direction.push(Evenement.UP);
@@ -73,6 +76,7 @@ export class Evenement {
     }
 
     down(){
+        console.log("down");
         let derniereDirection = this.get_lastDirection();
         if (derniereDirection != Evenement.UP && this.pressDown == false) {
             this.jeu.direction.push(Evenement.DOWN);
@@ -167,19 +171,24 @@ export class Evenement {
                 touch[0] - this.start[0],
                 touch[1] - this.start[1]
             ];
+            console.log(dist);
             if (dist[0] > this.threshold){
+                this.pressRight = false;
                 this.right();
                 this.start = touch;
             }
             if (-dist[0] > this.threshold){
+                this.pressLeft = false;
                 this.left();
                 this.start = touch;
             }
             if (dist[1] > this.threshold){
+                this.pressDown = false;
                 this.down();
                 this.start = touch;
             }
             if (-dist[1] > this.threshold){
+                this.pressUp = false;
                 this.up();
                 this.start = touch;
             }
