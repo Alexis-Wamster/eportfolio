@@ -1,20 +1,83 @@
 import { Jeu } from './Jeu.js';
-import { Boucle } from './Boucle.js';
+import { Serpent } from './Serpent.js';
+import { Dessin } from './Dessin.js';
+
+async function demarrerJeu() {
+    const canvas_fg = document.getElementById('foreground');
+    const canvas_bg = document.getElementById('background');
+    canvas_fg.classList.add("invisible");
+    canvas_bg.classList.add("invisible");
+
+    try {
+        // Capture tout la partie visible du body
+        const bodyNode = document.getElementById("body");
+        const rendered = await html2canvas(bodyNode, {
+            useCORS: true,
+            logging: false,
+            backgroundColor: null, // très important => transparent
+            x: window.scrollX,
+            y: window.scrollY,
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+        
+        const ctx = canvas_fg.getContext('2d');
+        ctx.clearRect(0, 0, canvas_fg.width, canvas_fg.height);
+        ctx.drawImage(rendered, 0, 0, canvas_fg.width, canvas_fg.height);
+
+        Array.from(bodyNode.children).forEach(element => {
+            if (element.id === "foreground" || element.id === "background") {
+                element.classList.remove("invisible");
+            }
+            else{
+                element.classList.add("invisible");
+            }
+        });
+        return rendered;
+    } catch (err) {
+        console.error("Erreur lors de la capture :", err);
+    }
+    canvas_fg.classList.remove("invisible");
+    return false;
+}
+
+function terminerJeu(){
+    const bodyNode = document.getElementById("body");
+    Array.from(bodyNode.children).forEach(element => {
+        if (element.id === "foreground") {
+            element.classList.add("invisible");
+        }
+        else{
+            element.classList.remove("invisible");
+        }
+    });
+}
+
 
 export class Evenement {
-    static UP = [0, -1];
-    static DOWN = [0, 1];
+    
     static LEFT = [-1, 0];
+    static UP = [0, -1];
     static RIGHT = [1, 0];
+    static DOWN = [0, 1];
 
-    constructor(jeu, boucle) {
+    static NUM_LEFT = 0;
+    static NUM_UP = 1;
+    static NUM_RIGHT = 2;
+    static NUM_DOWN = 3;
+
+    static DIRECTION = [Evenement.LEFT, Evenement.UP, Evenement.RIGHT, Evenement.DOWN];
+
+    constructor(jeu) {
         // clavier
         document.addEventListener('keydown', this.input.bind(this));
         document.addEventListener('keyup', this.output.bind(this));
-        this.pressLeft = false;
-        this.pressRight = false
-        this.pressUp = false;
-        this.pressDown = false;
+
+        this.touche = [];
+        this.input = [];
+        
+        this.isAddPlayer = false;
+        this.newPlayerInput = [];
 
         // mobile
         document.addEventListener('click', this.event_click.bind(this));
@@ -27,118 +90,123 @@ export class Evenement {
         
 
         this.jeu = jeu;
-        this.boucle = boucle;
     }
 
-
     // ============================= Action ============================== \\
+
+    addJoueur(inputListe){
+        const serpent = new Serpent(this.jeu, Dessin.getRandomColor());
+        this.jeu.serpents.push(serpent)
+        this.input.push([inputListe[0], inputListe[1], inputListe[2], inputListe[3]]);
+        this.touche.push([false, false, false, false]);
+        serpent.initialisation();
+    }
+
+    removePlayer(){
+        if (this.jeu.serpents.length > 1){
+            this.jeu.removeSnake(this.jeu.serpents[this.jeu.serpents.length -1]);
+            this.jeu.serpents.length --;
+            this.input.length --;
+            this.touche.length --;
+        }
+        else{
+            this.quitter();
+        }
+        
+    }
 
 
     quitter(){
         this.jeu.end_game();
+        terminerJeu();
     }
 
     pause(){
-        this.jeu.isFreeze = !this.jeu.isFreeze;
-        this.jeu.canvas.classList.remove("invisible");
         if (this.jeu.gameOver) {
-            this.jeu.initialisation();
-            this.jeu.gameOver = false;
+            demarrerJeu().then(promesse => {
+                this.jeu.initialisation();
+                this.jeu.gameOver = false;
+                this.jeu.toggleFreeze();
+            });
         }
-        this.boucle.boucler();
-    }
-
-    left(){
-        console.log("left");
-        let derniereDirection = this.get_lastDirection();
-        if (derniereDirection != Evenement.RIGHT && this.pressLeft == false) {
-            this.jeu.direction.push(Evenement.LEFT);
-            this.pressLeft = true;
+        else{
+            this.jeu.toggleFreeze();
         }
     }
 
-    right(){
-        console.log("right");
-        let derniereDirection = this.get_lastDirection();
-        if (derniereDirection != Evenement.LEFT && this.pressRight == false) {
-            this.jeu.direction.push(Evenement.RIGHT);
-            this.pressRight = true;
+    pushDirection(direction, joueur){
+        let derniereDirection = this.get_lastDirection(this.jeu.serpents[joueur]);
+        direction = Number(direction);
+        if (derniereDirection != Evenement.DIRECTION[(direction+2)%4] && this.touche[joueur][direction] == false) {
+            this.jeu.serpents[joueur].direction.push(Evenement.DIRECTION[direction]);
+            this.touche[joueur][direction] = true;
         }
     }
 
-    up(){
-        console.log("up");
-        let derniereDirection = this.get_lastDirection();
-        if (derniereDirection != Evenement.DOWN && this.pressUp == false) {
-            this.jeu.direction.push(Evenement.UP);
-            this.pressUp = true;
+    get_lastDirection(serpent){
+        if (serpent.direction.length > 0){
+            return serpent.direction[serpent.direction.length - 1];
         }
-    }
-
-    down(){
-        console.log("down");
-        let derniereDirection = this.get_lastDirection();
-        if (derniereDirection != Evenement.UP && this.pressDown == false) {
-            this.jeu.direction.push(Evenement.DOWN);
-            this.pressDown = true;
-        }
-    }
-
-    get_lastDirection(){
-        if (this.jeu.direction.length > 0){
-            return this.jeu.direction[this.jeu.direction.length - 1];
-        }
-        return this.jeu.derniereDirection;
+        return serpent.derniereDirection;
     }
 
     // ============================= Clavier ============================== \\
 
     input(e) {
-        if (e.key === " ") {
-            this.pause();
-            return;
-        }
-        if (e.key === "Escape") {
-            this.quitter();
-            return;
-        }
-        if (!this.jeu.isFreeze){
-            let derniereDirection = (this.jeu.direction.length > 0) ? this.jeu.direction[this.jeu.direction.length - 1] : this.jeu.derniereDirection;
-            switch (e.key) {
-                case "ArrowLeft":
-                    this.left();
-                    break;
-                case "ArrowUp":
-                    this.up();
-                    break;
-                case "ArrowRight":
-                    this.right();
-                    break;
-                case "ArrowDown":
-                    this.down();
-                    break;  
-                default:
-                    break;
-            }
+        switch (e.key) {
+            case " ":
+                this.pause();
+                break;
+            
+            case "Escape":
+                this.quitter();
+                break;
+            
+            case "+":
+                this.isAddPlayer = true;
+                this.newPlayerInput.length = 0;
+                break;
+            
+            case "-":
+                this.removePlayer();
+                break;
+        
+            default:
+                
+                let inputAlreadyExist = false;
+                if (!this.jeu.isFreeze){
+                    for (let joueur in this.input) {
+                        for (let direction in this.input[joueur]) {
+                            if (this.input[joueur][direction] == e.key){
+                                this.pushDirection(direction, joueur);
+                                inputAlreadyExist = true;
+                            }
+                        }
+                    }
+                }
+
+                if (this.isAddPlayer && !inputAlreadyExist){
+                    if (this.newPlayerInput.length < 4){
+                        this.newPlayerInput.push(e.key);
+                    }
+                    if (this.newPlayerInput.length >= 4){
+                        this.addJoueur(this.newPlayerInput);
+                        this.newPlayerInput.length = 0;
+                        this.isAddPlayer = false;
+                    }
+                }
+                break;
         }
     }
 
     output(e) {
-        switch (e.key) {
-            case "ArrowLeft":
-                this.pressLeft = false;
-                break; 
-            case "ArrowUp":
-                this.pressUp = false;
-                break;
-            case "ArrowRight":
-                this.pressRight = false;
-                break;
-            case "ArrowDown":
-                this.pressDown = false;
-                break;
-            default:
-                break;
+        for (let joueur in this.input) {
+            for (let direction in this.input[joueur]) {
+                if (this.input[joueur][direction] == e.key){
+                    this.pushDirection(direction, joueur);
+                    this.touche[joueur][direction] = false;
+                }
+            }
         }
     }
 
@@ -171,25 +239,24 @@ export class Evenement {
                 touch[0] - this.start[0],
                 touch[1] - this.start[1]
             ];
-            console.log(dist);
             if (dist[0] > this.threshold){
-                this.pressRight = false;
-                this.right();
+                this.touche[0][Evenement.NUM_RIGHT] = false;
+                this.pushDirection(Evenement.NUM_RIGHT, 0);
                 this.start = touch;
             }
             if (-dist[0] > this.threshold){
-                this.pressLeft = false;
-                this.left();
+                this.touche[0][Evenement.NUM_LEFT] = false;
+                this.pushDirection(Evenement.NUM_LEFT, 0);
                 this.start = touch;
             }
             if (dist[1] > this.threshold){
-                this.pressDown = false;
-                this.down();
+                this.touche[0][Evenement.NUM_DOWN] = false;
+                this.pushDirection(Evenement.NUM_DOWN, 0);
                 this.start = touch;
             }
             if (-dist[1] > this.threshold){
-                this.pressUp = false;
-                this.up();
+                this.touche[0][Evenement.NUM_UP] = false;
+                this.pushDirection(Evenement.NUM_UP, 0);
                 this.start = touch;
             }
         }

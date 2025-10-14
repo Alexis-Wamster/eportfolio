@@ -7,8 +7,6 @@ export class Boucle {
         this.jeu = jeu;
         this.time = 0;
         this.speed = 0.2;
-        //this.boucler = this.boucler.bind(this);
-        //this.boucler();
     }
 
     boucler() {
@@ -19,7 +17,6 @@ export class Boucle {
                 this.nextStep();
             }
             this.jeu.updateView(this.time);
-            //requestAnimationFrame(this.boucler);
         }        
     }
 

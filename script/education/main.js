@@ -1,7 +1,7 @@
 import { Background } from './background.js';
 import { Evenement } from './Evenement.js';
+import { Serpent } from './Serpent.js';
 import { Jeu } from './Jeu.js';
-import { Boucle } from './Boucle.js';
 
 //########################## CONSTANTE ##########################\\
 
@@ -16,8 +16,10 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 let jeu = new Jeu(canvas_fg, caseSize);
-let boucle = new Boucle(jeu);
-let evenement = new Evenement(jeu, boucle);
+
+let evenement = new Evenement(jeu);
+evenement.addJoueur(["ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"]);
+
 
 background_animate();
 
@@ -31,8 +33,10 @@ function resizeCanvas() {
     background.resize();
 }
 
-function background_animate() {
+function background_animate() { 
     background.draw();
-    boucle.boucler();
+    jeu.boucler();
+    
     requestAnimationFrame(background_animate);
+    //setTimeout(background_animate, 350);
 }

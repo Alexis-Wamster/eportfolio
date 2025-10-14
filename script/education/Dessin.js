@@ -24,30 +24,150 @@ export class Dessin {
         this.ctx = this.canvas.getContext("2d")
     }
 
-    update(time, pomme) {
+    updateSnake(serpent) {
+        const time = Math.min(1,(performance.now()-serpent.initial_time)/serpent.speed);
+        const taille = serpent.serpent.length
 
-        // corps
-        let emplacement = this.jeu.serpent[this.jeu.serpent.length - 2]["emplacement"]
-        let direction = this.jeu.serpent[this.jeu.serpent.length - 2]["direction"]
-        this.effacer_emplacement(emplacement)
-        this.draw_snake(emplacement, direction, 0, 0, "white", this.epaisseur);
+        this.effacer_ancienne_position(serpent);
 
-        // queue
-        emplacement = this.jeu.serpent[0]["emplacement"]
-        direction = this.jeu.serpent[0]["direction"]
-        this.effacer_emplacement(emplacement)
-        this.effacer_emplacement(Dessin.previous_emplacement(emplacement, direction))
-        this.draw_snake(emplacement, direction, 0, time, "white", this.epaisseur);      
+        if (taille === 1){
+            // TODO
+        }
+        else {
+            const tete = serpent.serpent[taille - 1];
+            const bout = serpent.serpent[0];
+            const infoTete = this.getInfoCase(tete);
+            const infoBout = this.getInfoCase(bout);
 
-        // tete
-        emplacement = this.jeu.serpent[this.jeu.serpent.length - 1]["emplacement"]
-        direction = this.jeu.serpent[this.jeu.serpent.length - 1]["direction"]
-        this.draw_snake(emplacement, direction, 1, time, "white", this.epaisseur);
-        
-        //this.draw_apple(pomme, "white", this.jeu.CASE_SIZE*0.4);
+            // contours
+            this.effacer_emplacement(bout);
+            this.draw_snake(bout, infoBout, 0, time, 2, this.epaisseur+5);
+            this.draw_snake(tete, infoTete, 1, time, 2, this.epaisseur+5);
+
+            if (taille >= 3){
+                const cou = serpent.serpent[taille - 2];
+                const infoCou = this.getInfoCase(cou);
+                this.effacer_emplacement(cou);
+                this.draw_snake(cou, infoCou, 1, 1, 2, this.epaisseur+5);
+
+                if (taille > 3){
+                    // en cas de lag, dessiner tout ce qui à évolué (pas juste le cou du serpent)
+                    const minIndex = Math.max(1, serpent.serpent.length - serpent.teteChange.length - 1);
+                    const maxIndex = serpent.serpent.length-2;
+                    let i;
+                    for (i=minIndex;i<maxIndex;i++){
+                        const body = serpent.serpent[i];
+                        const infoBody = this.getInfoCase(body);
+                        this.draw_snake(body, infoBody, 1, 1, 2, this.epaisseur+5);
+                    }
+                    // interieur
+                    for (i=minIndex;i<maxIndex;i++){
+                        const body = serpent.serpent[i];
+                        const infoBody = this.getInfoCase(body);
+                        this.draw_snake(body, infoBody, 1, 1, 1, this.epaisseur);
+                    }
+
+                    // redessiner par dessus le contours (en bas du corps et sur la queue)
+                    i = minIndex - 1;
+                    if (i > 0){
+                        if (i > 1){
+                            const body = serpent.serpent[i];
+                            const infoBody = this.getInfoCase(body);
+                            this.draw_snake(body, infoBody, 1, 1, 1, this.epaisseur);
+                        }
+                        const queue = serpent.serpent[1];
+                        const infoQueue = this.getInfoCase(queue);
+                        this.draw_snake(queue, infoQueue, 1, 1, 1, this.epaisseur);
+                 
+                    }
+                    
+                }
+                this.draw_snake(cou, infoCou, 1, 1, 1, this.epaisseur);
+            }
+
+            this.draw_snake(bout, infoBout, 0, time, 1, this.epaisseur);
+            this.draw_snake(tete, infoTete, 1, time, 1, this.epaisseur);
+            
+        }
+        serpent.teteChange.length = 0;     
     }
 
-    static previous_emplacement(emplacement, direction){
+    getInfoCase(emplacement){
+        try{
+            return this.jeu.listeCases[emplacement[0]][emplacement[1]];
+        }catch(e){
+            return undefined;
+        }
+    }
+
+    removeSnake(serpent){
+        this.effacer_ancienne_position(serpent);
+
+        // effacer le serpent
+        serpent.serpent.forEach(corps => {
+            this.jeu.dessin.effacer_emplacement(corps);
+        });
+        const tete = serpent.serpent[serpent.serpent.length-1];
+        const direction = this.getInfoCase(tete);
+        this.update_emplacement(Dessin.nextEmplacement(tete, direction));
+    }
+
+    colorCase(emplacement, color){
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(
+            emplacement[0]* this.jeu.CASE_SIZE,
+            emplacement[1]* this.jeu.CASE_SIZE,
+            this.jeu.CASE_SIZE,
+            this.jeu.CASE_SIZE
+        );
+    }
+
+    static getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+
+
+    // effacer les ancienne position du serpent
+    effacer_ancienne_position(serpent){
+        const body = (serpent.queueChange.length <= 0) ? serpent.serpent[0] : serpent.queueChange[0];
+        try{
+            const bodyInfo = this.getInfoCase(body);
+            const emplacement_ancienne_queue = Dessin.previousEmplacement(body, bodyInfo.direction);
+            this.update_emplacement(emplacement_ancienne_queue);
+        }
+        catch(e){}
+        
+        let i;
+        for (i in serpent.queueChange){
+            const body = serpent.queueChange[i];
+            this.update_emplacement(body);
+        }
+        serpent.queueChange.length = 0;
+    }
+
+    static nextEmplacement(emplacement, direction){
+        if ((direction === Dessin.LEFT) || (direction === Dessin.BOTTOM_LEFT) || (direction === Dessin.TOP_LEFT)){
+            return [emplacement[0]-1, emplacement[1]];
+        }
+        if ((direction === Dessin.RIGHT) || (direction === Dessin.TOP_RIGHT) || (direction === Dessin.BOTTOM_RIGHT)){
+            return [emplacement[0]+1, emplacement[1]];
+        }
+        if ((direction === Dessin.TOP) || (direction === Dessin.LEFT_TOP) || (direction === Dessin.RIGHT_TOP)){
+            return [emplacement[0], emplacement[1]-1];
+        }
+        if ((direction === Dessin.BOTTOM) || (direction === Dessin.LEFT_BOTTOM) || (direction === Dessin.RIGHT_BOTTOM)){
+            return [emplacement[0], emplacement[1]+1];
+        }
+        return emplacement;
+    }
+
+    static previousEmplacement(emplacement, direction){
         if ((direction === Dessin.LEFT) || (direction === Dessin.LEFT_TOP) || (direction === Dessin.LEFT_BOTTOM)){
             return [emplacement[0]+1, emplacement[1]];
         }
@@ -76,6 +196,40 @@ export class Dessin {
         this.ctx.clearRect(0,0,this.jeu.canvas.width, this.jeu.canvas.height);
     }
 
+    update_emplacement(emplacement, progress=0, effacer=true, color2=true, color1=true){
+        try{
+            const info = this.getInfoCase(emplacement);
+            if (effacer || info.type === Jeu.VIDE){this.effacer_emplacement(emplacement);}
+            switch (info.type) {
+                case Jeu.POMME:
+                    if(color2){this.draw_apple(emplacement, info.color2, this.jeu.CASE_SIZE*0.4+5)};
+                    if(color1){this.draw_apple(emplacement, info.color1, this.jeu.CASE_SIZE*0.4)};
+                    break;
+                case Jeu.SNAKE:
+                    const dernier = true;
+                    const premier = true;
+                    try{
+                        const precedant = previousEmplacement(emplacement, info.direction);
+                        const info2 = this.getInfoCase(precedant);
+                        dernier = !(info2.type == Jeu.SNAKE && info2.id == info.id);
+                    }catch(e){}
+                    try{
+                        const suivant = nextEmplacement(emplacement, info.direction);
+                        const info2 = this.getInfoCase(suivant);
+                        premier = !(info2.type == Jeu.SNAKE && info2.id == info.id);
+                    }catch(e){}
+                    const time = (dernier || premier) ? progress : 1;
+                    const sens =  (dernier) ? 1 : 0;
+                    this.draw_snake(emplacement, info, sens, time, this.epaisseur+5);
+                    this.draw_snake(emplacement, info, sens, time, this.epaisseur);
+            
+                default:
+                    break;
+            }
+        }
+        catch(e){}
+    }
+
     draw_apple(emplacement, color, epaisseur) {
         const circle = [
             (emplacement[0] + 0.5) * this.jeu.CASE_SIZE,
@@ -87,20 +241,36 @@ export class Dessin {
         this.ctx.fill();
     }
 
-    draw_snake(emplacement, direction, sens, progress, color, epaisseur) {
-
-        const DIRECTIONS = [
-            [1,0.5], [0,0.5], [0.5,1], [0.5,0],  // straight: left, right, up, down
-            [0,0], [0,0], // turn: bottom_left, right_up
-            [1,0], [1,0], // turn: bottom_right, left_up
-            [1,1], [1,1], // turn: top_right, left_down
-            [0,1], [0,1], // turn: top_left, right_down
-        ]
-        if (direction < 4) {
-            this.draw_straight(emplacement, DIRECTIONS[direction], sens, progress, color, epaisseur);
-        }
-        else {
-            this.draw_turn(emplacement, DIRECTIONS[direction], direction%2, sens, progress, color, epaisseur);
+    draw_snake(emplacement, infoCase, sens, progress, numColor, epaisseur) {
+        if (infoCase){
+            const DIRECTIONS = [
+                [1,0.5], [0,0.5], [0.5,1], [0.5,0],  // straight: left, right, up, down
+                [0,0], [0,0], // turn: bottom_left, right_up
+                [1,0], [1,0], // turn: bottom_right, left_up
+                [1,1], [1,1], // turn: top_right, left_down
+                [0,1], [0,1], // turn: top_left, right_down
+            ]
+            if (infoCase.direction < 4) {
+                this.draw_straight(
+                    emplacement,
+                    DIRECTIONS[infoCase.direction],
+                    sens,
+                    progress,
+                    infoCase["color"+numColor],
+                    epaisseur
+                );
+            }
+            else {
+                this.draw_turn(
+                    emplacement,
+                    DIRECTIONS[infoCase.direction],
+                    infoCase.direction%2,
+                    sens,
+                    progress,
+                    infoCase["color"+numColor],
+                    epaisseur
+                );
+            }
         }
     }
 
@@ -155,7 +325,9 @@ export class Dessin {
     // progress : (nombre entre 0 et 1) niveau de progression du serpent sur la case
     // color : couleur du serpent
     // epaisseur : épaisseur du serpent
-    draw_turn(emplacement, direction, axe_first_side, sens, progress, color, epaisseur) {    
+    draw_turn(emplacement, direction, axe_first_side, sens, progress, color, epaisseur) {
+        //arrondir pour éviter les problème
+        progress = Math.round(progress * 1e6) / 1e6;
         // Calculer le coin de la case
         const corner = [
             (emplacement[0]+direction[0]) * this.jeu.CASE_SIZE,
@@ -191,7 +363,7 @@ export class Dessin {
         let start = (sens === 0 ? angle2 : angle1);
 
         // Sens de parcours en fonction du signe de diff
-        let anticlockwise = Dessin.shortestIsTrigo(angle3, start)
+        let anticlockwise = Dessin.shortestIsTrigo(angle3, start);
 
         this.ctx.fillStyle = color;
         // Dessiner l'arc
@@ -206,7 +378,7 @@ export class Dessin {
         // Dessiner le cercle
         this.ctx.beginPath();
         this.ctx.arc(circle[0], circle[1], epaisseur / 2, 0, 2 * Math.PI);
-        this.ctx.fill();
+        this.ctx.fill();        
     }
 
     static normalizeAngle(angle) {
@@ -223,7 +395,7 @@ export class Dessin {
         if (diff < 0) diff += 2 * Math.PI;
 
         // cas particulier : si a et b représentent le même point (π et -π)
-        if (Math.abs(diff - 2 * Math.PI) < 1e-12) return 0;
+        if (Math.abs(diff - 2 * Math.PI) < 0) return 0;
 
         return diff;
     }
@@ -232,4 +404,23 @@ export class Dessin {
     static shortestIsTrigo(a, b) {
         return Dessin.angleTrigo(a, b) <= Math.PI; // égalité = les 2 chemins sont équivalents
     }
+
+    static arcDegrees(start, end, anticlockwise) {
+        // Normalise dans [0, 2π)
+        const norm = angle => (angle % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
+        start = norm(start);
+        end   = norm(end);
+
+        let angle;
+        if (anticlockwise) {
+            angle = (end - start + 2*Math.PI) % (2*Math.PI);
+        } else {
+            angle = (start - end + 2*Math.PI) % (2*Math.PI);
+        }
+
+        return angle * 180 / Math.PI; // conversion radians → degrés
+    }
+
+
+
 }
